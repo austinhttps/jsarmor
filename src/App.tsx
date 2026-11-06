@@ -4,6 +4,7 @@ import { PresetSelector } from './components/PresetSelector';
 import { MetricsBar } from './components/MetricsBar';
 import { AdvancedOptionsDrawer } from './components/AdvancedOptionsDrawer';
 import { EditorPlayground } from './components/EditorPlayground';
+import { BatchProcessor } from './components/BatchProcessor';
 import { SecuritySettingsModal } from './components/SecuritySettingsModal';
 import { SAMPLE_CODES } from './config/sampleCodes';
 import { getEffectiveConfig } from './config/presets';
@@ -108,9 +109,9 @@ export default function App() {
             />
           </>
         ) : (
-          <div className="border border-slate-800 rounded-2xl bg-slate-900/60 p-12 text-center text-slate-400">
-            Batch Processor component is being wired in Task 6.
-          </div>
+          <BatchProcessor
+            config={getEffectiveConfig(preset, securityOptions, advancedOverrides)}
+          />
         )}
       </main>
 
