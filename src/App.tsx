@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Header } from './components/Header';
 import { PresetSelector } from './components/PresetSelector';
 import { MetricsBar } from './components/MetricsBar';
@@ -6,9 +6,12 @@ import { AdvancedOptionsDrawer } from './components/AdvancedOptionsDrawer';
 import { EditorPlayground } from './components/EditorPlayground';
 import { BatchProcessor } from './components/BatchProcessor';
 import { SecuritySettingsModal } from './components/SecuritySettingsModal';
+import { ConfigExportModal } from './components/ConfigExportModal';
+import { SandboxRunnerModal } from './components/SandboxRunnerModal';
 import { SAMPLE_CODES } from './config/sampleCodes';
 import { getEffectiveConfig } from './config/presets';
 import { obfuscatorClient } from './workers/workerBridge';
+import { decodeStateFromHash } from './utils/urlState';
 import type { PresetTier, ObfuscatorConfig, SecurityOptions, MetricsData } from './types/obfuscator';
 
 export default function App() {
@@ -20,8 +23,21 @@ export default function App() {
   const [metrics, setMetrics] = useState<MetricsData | undefined>(undefined);
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
 
-  // Security state
+  // Modals state
   const [isSecurityModalOpen, setIsSecurityModalOpen] = useState(false);
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+  const [isSandboxModalOpen, setIsSandboxModalOpen] = useState(false);
+
+  // Restore URL state if present on initial load
+  useEffect(() => {
+    if (window.location.hash) {
+      const restored = decodeStateFromHash(window.location.hash);
+      if (restored) {
+        setInputCode(restored.code);
+        setPreset(restored.preset);
+      }
+    }
+  }, []);
   const [securityOptions, setSecurityOptions] = useState<SecurityOptions>({
     domainLock: [],
     selfDefending: false,
@@ -70,9 +86,9 @@ export default function App() {
       <Header
         activeTab={activeTab}
         onTabChange={setActiveTab}
-        onOpenExport={() => alert('Export Config modal available in Task 7')}
+        onOpenExport={() => setIsExportModalOpen(true)}
         onOpenSecurity={() => setIsSecurityModalOpen(true)}
-        onRunSandbox={() => alert('Sandbox Runner modal available in Task 7')}
+        onRunSandbox={() => setIsSandboxModalOpen(true)}
         isProcessing={isProcessing}
         onObfuscate={handleRunObfuscation}
         onCancel={handleCancel}
@@ -120,6 +136,20 @@ export default function App() {
         onClose={() => setIsSecurityModalOpen(false)}
         security={securityOptions}
         onChange={setSecurityOptions}
+      />
+
+      <ConfigExportModal
+        isOpen={isExportModalOpen}
+        onClose={() => setIsExportModalOpen(false)}
+        config={getEffectiveConfig(preset, securityOptions, advancedOverrides)}
+        inputCode={inputCode}
+        preset={preset}
+      />
+
+      <SandboxRunnerModal
+        isOpen={isSandboxModalOpen}
+        onClose={() => setIsSandboxModalOpen(false)}
+        code={outputCode || inputCode}
       />
     </div>
   );
