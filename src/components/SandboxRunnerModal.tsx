@@ -25,52 +25,68 @@ export const SandboxRunnerModal: React.FC<SandboxRunnerModalProps> = ({
 
     const capturedLogs: string[] = [];
 
+    // Message handler to receive logs via postMessage across iframe boundary
+    const onMessage = (event: MessageEvent) => {
+      if (event.data && event.data.type === 'SANDBOX_CONSOLE') {
+        const { level, args } = event.data;
+        const formatted = `[${level}] ` + args.map((a: unknown) => (typeof a === 'object' ? JSON.stringify(a) : String(a))).join(' ');
+        capturedLogs.push(formatted);
+      }
+    };
+
+    window.addEventListener('message', onMessage);
+
     const iframe = document.createElement('iframe');
     iframe.style.display = 'none';
     iframe.sandbox.add('allow-scripts');
+
+    // Build self-contained HTML document for the sandboxed iframe
+    const escapedCode = JSON.stringify(code);
+    const htmlContent = `
+      <!doctype html>
+      <html>
+        <head>
+          <script>
+            (function() {
+              function send(level, args) {
+                try {
+                  window.parent.postMessage({
+                    type: 'SANDBOX_CONSOLE',
+                    level: level,
+                    args: Array.from(args)
+                  }, '*');
+                } catch(e) {}
+              }
+
+              console.log = function() { send('LOG', arguments); };
+              console.error = function() { send('ERR', arguments); };
+              console.warn = function() { send('WARN', arguments); };
+              console.info = function() { send('INFO', arguments); };
+
+              try {
+                eval(${escapedCode});
+              } catch(err) {
+                send('ERR', ['Runtime Error: ' + err.message]);
+              }
+            })();
+          <\/script>
+        </head>
+        <body></body>
+      </html>
+    `;
+
+    iframe.srcdoc = htmlContent;
     document.body.appendChild(iframe);
 
-    const iframeWin = iframe.contentWindow;
-    if (!iframeWin) {
-      setExecutionError('Could not construct isolated sandbox context.');
-      setIsRunning(false);
-      return;
-    }
-
-    try {
-      const customConsole = {
-        log: (...args: any[]) => {
-          capturedLogs.push('[LOG] ' + args.map((a) => (typeof a === 'object' ? JSON.stringify(a) : String(a))).join(' '));
-        },
-        error: (...args: any[]) => {
-          capturedLogs.push('[ERR] ' + args.map((a) => (typeof a === 'object' ? JSON.stringify(a) : String(a))).join(' '));
-        },
-        warn: (...args: any[]) => {
-          capturedLogs.push('[WARN] ' + args.map((a) => (typeof a === 'object' ? JSON.stringify(a) : String(a))).join(' '));
-        },
-      };
-
-      const runScript = `
-        (function(console) {
-          try {
-            ${code}
-          } catch(e) {
-            console.error("Runtime exception:", e.message);
-          }
-        })(parentConsole);
-      `;
-
-      // @ts-expect-error Parent communication bridge
-      iframeWin.parentConsole = customConsole;
-      (iframeWin as unknown as { eval: (s: string) => void }).eval(runScript);
-
+    // Allow script execution to complete
+    setTimeout(() => {
+      window.removeEventListener('message', onMessage);
+      try {
+        document.body.removeChild(iframe);
+      } catch {}
       setLogs(capturedLogs.length > 0 ? capturedLogs : ['(Execution completed with 0 console output statements)']);
-    } catch (err: unknown) {
-      setExecutionError(err instanceof Error ? err.message : String(err));
-    } finally {
       setIsRunning(false);
-      document.body.removeChild(iframe);
-    }
+    }, 400);
   };
 
   return (

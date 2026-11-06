@@ -4,13 +4,16 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
+    "dev": "node scripts/patch-obfuscator.cjs && vite",
+    "build": "node scripts/patch-obfuscator.cjs && tsc && vite build",
+    "postinstall": "node scripts/patch-obfuscator.cjs",
     "preview": "vite preview",
     "test": "vitest run"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
+    "@types/chance": "^1.1.8",
+    "chance": "^1.1.13",
     "file-saver": "^2.0.5",
     "javascript-obfuscator": "^4.1.1",
     "jszip": "^3.10.1",
