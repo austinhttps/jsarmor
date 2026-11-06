@@ -58,85 +58,87 @@ export const ConfigExportModal: React.FC<ConfigExportModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-[#06070a]/80 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="bg-[#0e1119] border border-[#202737] rounded-xl w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
+        <div className="px-5 py-3.5 border-b border-[#1c2230] flex items-center justify-between bg-[#0b0d14]">
           <div className="flex items-center space-x-2 text-slate-100">
-            <Terminal className="w-5 h-5 text-cyan-400" />
-            <h2 className="text-sm font-bold">Export Config, CLI Command & URL Sharing</h2>
+            <Terminal className="w-4 h-4 text-slate-300" />
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-200">
+              Export Configuration & CLI
+            </h2>
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-200 transition p-1 rounded-lg"
+            className="text-slate-400 hover:text-slate-200 transition p-1 rounded-md"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-6 overflow-y-auto text-xs text-slate-300">
+        <div className="p-5 space-y-5 overflow-y-auto text-xs text-slate-300">
           {/* Shareable Link */}
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             <label className="font-semibold text-slate-200 flex items-center space-x-1.5">
-              <Share2 className="w-4 h-4 text-cyan-400" />
-              <span>Shareable Playground URL</span>
+              <Share2 className="w-3.5 h-3.5 text-slate-400" />
+              <span>Shareable Playground Snapshot</span>
             </label>
-            <p className="text-[11px] text-slate-400">
-              Encodes your current source code and preset choice into a shareable URL hash.
+            <p className="text-[11px] text-slate-400 leading-relaxed">
+              Serializes current snippet and AST options directly into an immutable URL hash.
             </p>
             <button
               onClick={handleCopyShareUrl}
-              className="flex items-center space-x-2 px-3.5 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-slate-200 transition"
+              className="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-[#141824] hover:bg-[#1c2233] border border-[#212738] text-slate-200 transition font-mono text-[11px]"
             >
               {copiedShareUrl ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-              <span>{copiedShareUrl ? 'Link Copied to Clipboard!' : 'Copy Shareable URL'}</span>
+              <span>{copiedShareUrl ? 'Snapshot URL Copied' : 'Copy Shareable Link'}</span>
             </button>
           </div>
 
           {/* JSON Config */}
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             <div className="flex items-center justify-between">
               <label className="font-semibold text-slate-200">
-                JSON Configuration (<code>obfuscator.config.json</code>)
+                JSON Options Spec (<code>obfuscator.config.json</code>)
               </label>
               <div className="flex items-center space-x-2">
                 <button
                   onClick={handleCopyJson}
-                  className="flex items-center space-x-1 px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition"
+                  className="flex items-center space-x-1 px-2.5 py-1 rounded bg-[#141824] hover:bg-[#1c2233] text-slate-300 border border-[#212738] transition font-mono text-[11px]"
                 >
                   {copiedConfig ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
                   <span>{copiedConfig ? 'Copied' : 'Copy'}</span>
                 </button>
                 <button
                   onClick={handleDownloadJson}
-                  className="flex items-center space-x-1 px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition"
+                  className="flex items-center space-x-1 px-2.5 py-1 rounded bg-[#141824] hover:bg-[#1c2233] text-slate-300 border border-[#212738] transition font-mono text-[11px]"
                 >
                   <Download className="w-3 h-3" />
-                  <span>Download JSON</span>
+                  <span>Download</span>
                 </button>
               </div>
             </div>
-            <pre className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-[11px] font-mono text-cyan-300 max-h-48 overflow-y-auto">
+            <pre className="p-3 rounded-lg bg-[#08090f] border border-[#1b202d] text-[11px] font-mono text-slate-300 max-h-44 overflow-y-auto">
               {jsonConfig}
             </pre>
           </div>
 
           {/* CLI Command */}
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             <div className="flex items-center justify-between">
               <label className="font-semibold text-slate-200">
-                Node / CI Command Line
+                Command Line Execution
               </label>
               <button
                 onClick={handleCopyCli}
-                className="flex items-center space-x-1 px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition"
+                className="flex items-center space-x-1 px-2.5 py-1 rounded bg-[#141824] hover:bg-[#1c2233] text-slate-300 border border-[#212738] transition font-mono text-[11px]"
               >
                 {copiedCli ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
-                <span>{copiedCli ? 'Copied' : 'Copy Command'}</span>
+                <span>{copiedCli ? 'Copied' : 'Copy CLI'}</span>
               </button>
             </div>
-            <pre className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-[11px] font-mono text-slate-300 max-h-36 overflow-y-auto whitespace-pre-wrap">
+            <pre className="p-3 rounded-lg bg-[#08090f] border border-[#1b202d] text-[11px] font-mono text-slate-400 max-h-32 overflow-y-auto whitespace-pre-wrap">
               {cliSnippet}
             </pre>
           </div>

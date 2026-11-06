@@ -33,99 +33,90 @@ export const SecuritySettingsModal: React.FC<SecuritySettingsModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col">
+    <div className="fixed inset-0 z-50 bg-[#06070a]/80 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="bg-[#0e1119] border border-[#202737] rounded-xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
+        <div className="px-5 py-3.5 border-b border-[#1c2230] flex items-center justify-between bg-[#0b0d14]">
           <div className="flex items-center space-x-2 text-slate-100">
-            <Lock className="w-5 h-5 text-amber-400" />
-            <h2 className="text-sm font-bold">Security, Anti-Tamper & Domain Lock</h2>
+            <Lock className="w-4 h-4 text-slate-300" />
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-200">
+              Security & Environment Boundaries
+            </h2>
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-200 transition p-1 rounded-lg"
+            className="text-slate-400 hover:text-slate-200 transition p-1 rounded-md"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-5 text-xs text-slate-300">
+        <div className="p-5 space-y-4 text-xs text-slate-300">
           {/* Domain Lock */}
-          <div className="space-y-2">
-            <div className="flex items-center space-x-2">
-              <Globe className="w-4 h-4 text-cyan-400" />
-              <label className="font-semibold text-slate-200">Domain Locking</label>
+          <div className="space-y-1.5">
+            <div className="flex items-center space-x-1.5">
+              <Globe className="w-3.5 h-3.5 text-slate-400" />
+              <label className="font-semibold text-slate-200">Host Domain Boundary</label>
             </div>
-            <p className="text-[11px] text-slate-400">
-              Only allow execution on these hostnames or regexes (one per line or comma-separated).
-              If opened elsewhere, the script redirects to <code>about:blank</code> or halts.
+            <p className="text-[11px] text-slate-400 leading-relaxed">
+              Enforces origin gating. The script halts if launched from an unlisted host or port (one hostname per line).
             </p>
             <textarea
               rows={3}
               value={domainText}
               onChange={(e) => setDomainText(e.target.value)}
               placeholder="example.com&#10;app.internal.domain&#10;localhost:3000"
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 font-mono text-xs text-slate-200 focus:outline-none focus:border-cyan-500"
+              className="w-full bg-[#08090f] border border-[#1d2331] rounded-lg p-3 font-mono text-xs text-slate-200 focus:outline-none focus:border-slate-500 transition"
             />
           </div>
 
           {/* Self Defending */}
-          <label className="flex items-start space-x-3 cursor-pointer p-3 rounded-xl bg-slate-950/60 border border-slate-800/80">
+          <label className="flex items-start space-x-3 cursor-pointer p-3 rounded-lg bg-[#0a0c12] border border-[#1c2230] hover:border-[#2b3449] transition">
             <input
               type="checkbox"
               checked={security.selfDefending}
               onChange={(e) => onChange({ ...security, selfDefending: e.target.checked })}
-              className="mt-0.5 rounded border-slate-700 bg-slate-900 text-amber-500 focus:ring-0"
+              className="mt-0.5 rounded border-slate-700 bg-slate-900 text-slate-100 focus:ring-0"
             />
-            <div className="space-y-1">
-              <span className="font-semibold text-slate-100 flex items-center space-x-1.5">
-                <span>Self-Defending Anti-Format Check</span>
-                <span className="text-[10px] px-1.5 py-0.2 rounded bg-amber-950 text-amber-400 border border-amber-800">
-                  Defensive
-                </span>
-              </span>
+            <div className="space-y-0.5">
+              <span className="font-semibold text-slate-200">Anti-Format / Self-Defending Trap</span>
               <p className="text-[11px] text-slate-400">
-                Guards code against beautification or tampering. If formatted or modified, an intentional infinite recursion will stall execution.
+                Stalls execution via defensive recursion if the output script is reformatted or beautified.
               </p>
             </div>
           </label>
 
           {/* Debug Protection */}
-          <label className="flex items-start space-x-3 cursor-pointer p-3 rounded-xl bg-slate-950/60 border border-slate-800/80">
+          <label className="flex items-start space-x-3 cursor-pointer p-3 rounded-lg bg-[#0a0c12] border border-[#1c2230] hover:border-[#2b3449] transition">
             <input
               type="checkbox"
               checked={security.debugProtection}
               onChange={(e) => onChange({ ...security, debugProtection: e.target.checked })}
-              className="mt-0.5 rounded border-slate-700 bg-slate-900 text-purple-500 focus:ring-0"
+              className="mt-0.5 rounded border-slate-700 bg-slate-900 text-slate-100 focus:ring-0"
             />
-            <div className="space-y-1">
-              <span className="font-semibold text-slate-100 flex items-center space-x-1.5">
-                <span>Debug Protection (DevTools Countermeasures)</span>
-                <span className="text-[10px] px-1.5 py-0.2 rounded bg-purple-950 text-purple-400 border border-purple-800">
-                  Aggressive
-                </span>
-              </span>
+            <div className="space-y-0.5">
+              <span className="font-semibold text-slate-200">DevTools Debug Protection</span>
               <p className="text-[11px] text-slate-400">
-                Freezes browser developer tools inspection by repeatedly firing <code>debugger;</code> traps when the console is opened.
+                Fires recursive debugger interrupts if the browser inspector is opened.
               </p>
             </div>
           </label>
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-3 border-t border-slate-800 bg-slate-950 flex justify-end space-x-2">
+        <div className="px-5 py-3 border-t border-[#1c2230] bg-[#0b0d14] flex justify-end space-x-2">
           <button
             onClick={onClose}
-            className="px-4 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition"
+            className="px-3 py-1.5 rounded-md text-xs font-medium text-slate-400 hover:text-white transition"
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
-            className="px-4 py-1.5 rounded-lg text-xs font-semibold bg-cyan-600 hover:bg-cyan-500 text-white transition shadow-lg shadow-cyan-950"
+            className="px-4 py-1.5 rounded-md text-xs font-semibold bg-slate-100 hover:bg-white text-slate-950 transition"
           >
-            Apply Security Options
+            Save Boundaries
           </button>
         </div>
       </div>

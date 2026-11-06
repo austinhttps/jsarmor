@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Editor, { DiffEditor } from '@monaco-editor/react';
-import { Copy, Download, Columns, FileCode, Check, RefreshCw } from 'lucide-react';
+import { Copy, Download, Columns, Check, RefreshCw } from 'lucide-react';
 import { SAMPLE_CODES } from '../config/sampleCodes';
 
 interface EditorPlaygroundProps {
@@ -45,33 +45,33 @@ export const EditorPlayground: React.FC<EditorPlaygroundProps> = ({
     lineNumbers: 'on' as const,
     scrollBeyondLastLine: false,
     automaticLayout: true,
-    fontFamily: 'Fira Code, Menlo, Monaco, Consolas, monospace',
+    fontFamily: 'JetBrains Mono, SF Mono, Menlo, monospace',
     fontLigatures: true,
     theme: 'vs-dark',
   };
 
   return (
-    <div className="flex flex-col flex-1 min-h-[500px] border border-slate-800 rounded-xl overflow-hidden bg-slate-900 shadow-xl">
+    <div className="flex flex-col flex-1 min-h-[500px] border border-[#1d222e] rounded-xl overflow-hidden bg-[#0d0f17] shadow-xl">
       {/* Top Toolbar */}
-      <div className="border-b border-slate-800 bg-slate-950 px-4 py-2 flex items-center justify-between text-xs">
+      <div className="border-b border-[#1d222e] bg-[#0a0c12] px-4 py-2 flex items-center justify-between text-xs">
         <div className="flex items-center space-x-3">
-          <span className="font-semibold text-slate-300">Input Source:</span>
+          <span className="text-slate-400 font-medium">Snippets:</span>
           <div className="flex items-center space-x-1.5">
             <button
               onClick={() => onSampleSelect('basic')}
-              className="px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-800 transition"
+              className="px-2.5 py-1 rounded bg-[#131722] hover:bg-[#1a2030] text-slate-300 border border-[#212738] transition font-mono text-[11px]"
             >
               Auth Basic
             </button>
             <button
               onClick={() => onSampleSelect('apiClient')}
-              className="px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-800 transition"
+              className="px-2.5 py-1 rounded bg-[#131722] hover:bg-[#1a2030] text-slate-300 border border-[#212738] transition font-mono text-[11px]"
             >
               API Client
             </button>
             <button
               onClick={() => onSampleSelect('algorithm')}
-              className="px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-800 transition"
+              className="px-2.5 py-1 rounded bg-[#131722] hover:bg-[#1a2030] text-slate-300 border border-[#212738] transition font-mono text-[11px]"
             >
               Proof-of-Work
             </button>
@@ -81,20 +81,20 @@ export const EditorPlayground: React.FC<EditorPlaygroundProps> = ({
         <div className="flex items-center space-x-2">
           <button
             onClick={() => setShowDiff(!showDiff)}
-            className={`flex items-center space-x-1.5 px-2.5 py-1 rounded border transition ${
+            className={`flex items-center space-x-1.5 px-2.5 py-1 rounded border transition text-xs font-medium ${
               showDiff
-                ? 'bg-cyan-950 border-cyan-800 text-cyan-300'
-                : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200'
+                ? 'bg-[#1b2233] border-[#313c54] text-slate-100'
+                : 'bg-[#131722] border-[#212738] text-slate-400 hover:text-slate-200'
             }`}
           >
             <Columns className="w-3.5 h-3.5" />
-            <span>{showDiff ? 'Dual Editor' : 'Side-by-side Diff'}</span>
+            <span>{showDiff ? 'Dual View' : 'Diff Inspector'}</span>
           </button>
 
           <button
             onClick={handleCopy}
             disabled={!outputCode}
-            className="flex items-center space-x-1.5 px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 disabled:opacity-40 transition"
+            className="flex items-center space-x-1.5 px-2.5 py-1 rounded bg-[#131722] border border-[#212738] text-slate-300 hover:bg-[#1b2233] disabled:opacity-40 transition text-xs font-medium"
           >
             {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
             <span>{copied ? 'Copied' : 'Copy Output'}</span>
@@ -103,7 +103,7 @@ export const EditorPlayground: React.FC<EditorPlaygroundProps> = ({
           <button
             onClick={handleDownload}
             disabled={!outputCode}
-            className="flex items-center space-x-1.5 px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 disabled:opacity-40 transition"
+            className="flex items-center space-x-1.5 px-2.5 py-1 rounded bg-[#131722] border border-[#212738] text-slate-300 hover:bg-[#1b2233] disabled:opacity-40 transition text-xs font-medium"
           >
             <Download className="w-3.5 h-3.5" />
             <span>Download .js</span>
@@ -126,15 +126,12 @@ export const EditorPlayground: React.FC<EditorPlaygroundProps> = ({
             }}
           />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 h-full divide-y md:divide-y-0 md:divide-x divide-slate-800">
+          <div className="grid grid-cols-1 md:grid-cols-2 h-full divide-y md:divide-y-0 md:divide-x divide-[#1d222e]">
             {/* Input Editor */}
             <div className="flex flex-col h-full">
-              <div className="bg-slate-950/80 px-3 py-1.5 border-b border-slate-800 text-[11px] font-mono text-slate-400 flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <FileCode className="w-3.5 h-3.5 text-cyan-400" />
-                  <span>original.js</span>
-                </div>
-                <span>Editable</span>
+              <div className="bg-[#0b0d14] px-3.5 py-1.5 border-b border-[#1d222e] text-[11px] font-mono text-slate-400 flex items-center justify-between">
+                <span>source.js (Editable)</span>
+                <span className="text-slate-500 text-[10px]">UTF-8</span>
               </div>
               <div className="flex-1 min-h-[420px]">
                 <Editor
@@ -150,12 +147,9 @@ export const EditorPlayground: React.FC<EditorPlaygroundProps> = ({
 
             {/* Output Editor */}
             <div className="flex flex-col h-full relative">
-              <div className="bg-slate-950/80 px-3 py-1.5 border-b border-slate-800 text-[11px] font-mono text-slate-400 flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <FileCode className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>obfuscated.js</span>
-                </div>
-                <span>Read-only</span>
+              <div className="bg-[#0b0d14] px-3.5 py-1.5 border-b border-[#1d222e] text-[11px] font-mono text-slate-400 flex items-center justify-between">
+                <span>protected.js (Obfuscated)</span>
+                <span className="text-slate-500 text-[10px]">Read-only</span>
               </div>
               <div className="flex-1 min-h-[420px]">
                 <Editor
@@ -171,9 +165,9 @@ export const EditorPlayground: React.FC<EditorPlaygroundProps> = ({
               </div>
 
               {isProcessing && (
-                <div className="absolute inset-0 bg-slate-950/70 backdrop-blur-sm flex flex-col items-center justify-center space-y-3 z-10">
-                  <RefreshCw className="w-8 h-8 text-cyan-400 animate-spin" />
-                  <p className="text-xs font-semibold text-slate-200">Scrambling AST in Web Worker...</p>
+                <div className="absolute inset-0 bg-[#090b10]/80 backdrop-blur-sm flex flex-col items-center justify-center space-y-3 z-10">
+                  <RefreshCw className="w-6 h-6 text-slate-200 animate-spin" />
+                  <p className="text-xs font-medium text-slate-300 font-mono">Restructuring AST...</p>
                 </div>
               )}
             </div>

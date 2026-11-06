@@ -16,37 +16,40 @@ export const AdvancedOptionsDrawer: React.FC<AdvancedOptionsDrawerProps> = ({
   onToggle,
 }) => {
   return (
-    <div className="border border-slate-800 rounded-xl bg-slate-900/40 overflow-hidden transition-all">
+    <div className="border border-[#1d222e] rounded-xl bg-[#0d0f17] overflow-hidden transition-all">
       <button
         type="button"
         onClick={onToggle}
-        className="w-full px-4 py-2.5 flex items-center justify-between text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800/50 transition"
+        className="w-full px-4 py-2.5 flex items-center justify-between text-xs font-medium text-slate-300 hover:text-white hover:bg-[#131722] transition"
       >
         <div className="flex items-center space-x-2">
-          <SlidersHorizontal className="w-3.5 h-3.5 text-cyan-400" />
-          <span>Advanced AST & Obfuscation Knobs</span>
+          <SlidersHorizontal className="w-3.5 h-3.5 text-slate-400" />
+          <span>Advanced AST Configuration</span>
         </div>
-        {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+        <div className="flex items-center space-x-2 text-slate-500 font-mono text-[11px]">
+          <span>{isOpen ? 'Collapse' : 'Expand Options'}</span>
+          {isOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+        </div>
       </button>
 
       {isOpen && (
-        <div className="p-4 border-t border-slate-800 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
+        <div className="p-4 border-t border-[#1d222e] bg-[#0b0d14] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 text-xs">
           {/* Compact */}
-          <label className="flex items-start space-x-2.5 cursor-pointer">
+          <label className="flex items-start space-x-2.5 cursor-pointer p-2.5 rounded-lg border border-[#1b202c] hover:border-[#283042] bg-[#0f121a] transition">
             <input
               type="checkbox"
               checked={Boolean(config.compact)}
               onChange={(e) => onChange({ compact: e.target.checked })}
-              className="mt-0.5 rounded border-slate-700 bg-slate-950 text-cyan-500 focus:ring-0"
+              className="mt-0.5 rounded border-slate-700 bg-slate-900 text-slate-200 focus:ring-0"
             />
             <div>
               <span className="font-semibold text-slate-200">Compact Code</span>
-              <p className="text-[11px] text-slate-400">One-line minification</p>
+              <p className="text-[11px] text-slate-400 mt-0.5">Strip whitespace and collapse into a single line</p>
             </div>
           </label>
 
           {/* Control Flow Flattening */}
-          <label className="flex items-start space-x-2.5 cursor-pointer">
+          <label className="flex items-start space-x-2.5 cursor-pointer p-2.5 rounded-lg border border-[#1b202c] hover:border-[#283042] bg-[#0f121a] transition">
             <input
               type="checkbox"
               checked={Boolean(config.controlFlowFlattening)}
@@ -54,16 +57,16 @@ export const AdvancedOptionsDrawer: React.FC<AdvancedOptionsDrawerProps> = ({
                 controlFlowFlattening: e.target.checked,
                 controlFlowFlatteningThreshold: e.target.checked ? 0.75 : 0,
               })}
-              className="mt-0.5 rounded border-slate-700 bg-slate-950 text-cyan-500 focus:ring-0"
+              className="mt-0.5 rounded border-slate-700 bg-slate-900 text-slate-200 focus:ring-0"
             />
             <div>
               <span className="font-semibold text-slate-200">Control Flow Flattening</span>
-              <p className="text-[11px] text-slate-400">Transforms loops/branches into switch state machines</p>
+              <p className="text-[11px] text-slate-400 mt-0.5">Transforms loops/branches into switch state machines</p>
             </div>
           </label>
 
           {/* Dead Code Injection */}
-          <label className="flex items-start space-x-2.5 cursor-pointer">
+          <label className="flex items-start space-x-2.5 cursor-pointer p-2.5 rounded-lg border border-[#1b202c] hover:border-[#283042] bg-[#0f121a] transition">
             <input
               type="checkbox"
               checked={Boolean(config.deadCodeInjection)}
@@ -71,16 +74,16 @@ export const AdvancedOptionsDrawer: React.FC<AdvancedOptionsDrawerProps> = ({
                 deadCodeInjection: e.target.checked,
                 deadCodeInjectionThreshold: e.target.checked ? 0.4 : 0,
               })}
-              className="mt-0.5 rounded border-slate-700 bg-slate-950 text-cyan-500 focus:ring-0"
+              className="mt-0.5 rounded border-slate-700 bg-slate-900 text-slate-200 focus:ring-0"
             />
             <div>
               <span className="font-semibold text-slate-200">Dead Code Injection</span>
-              <p className="text-[11px] text-slate-400">Random dummy blocks to deceive static decompilers</p>
+              <p className="text-[11px] text-slate-400 mt-0.5">Injects unreachable blocks to fool static analysis</p>
             </div>
           </label>
 
           {/* String Array */}
-          <label className="flex items-start space-x-2.5 cursor-pointer">
+          <label className="flex items-start space-x-2.5 cursor-pointer p-2.5 rounded-lg border border-[#1b202c] hover:border-[#283042] bg-[#0f121a] transition">
             <input
               type="checkbox"
               checked={Boolean(config.stringArray)}
@@ -88,84 +91,39 @@ export const AdvancedOptionsDrawer: React.FC<AdvancedOptionsDrawerProps> = ({
                 stringArray: e.target.checked,
                 stringArrayThreshold: e.target.checked ? 0.8 : 0,
               })}
-              className="mt-0.5 rounded border-slate-700 bg-slate-950 text-cyan-500 focus:ring-0"
+              className="mt-0.5 rounded border-slate-700 bg-slate-900 text-slate-200 focus:ring-0"
             />
             <div>
               <span className="font-semibold text-slate-200">String Array Extraction</span>
-              <p className="text-[11px] text-slate-400">Pulls string literals into a hoisted array</p>
+              <p className="text-[11px] text-slate-400 mt-0.5">Hoists literal strings into a scrambled array</p>
             </div>
           </label>
 
           {/* Numbers to Expressions */}
-          <label className="flex items-start space-x-2.5 cursor-pointer">
+          <label className="flex items-start space-x-2.5 cursor-pointer p-2.5 rounded-lg border border-[#1b202c] hover:border-[#283042] bg-[#0f121a] transition">
             <input
               type="checkbox"
               checked={Boolean(config.numbersToExpressions)}
               onChange={(e) => onChange({ numbersToExpressions: e.target.checked })}
-              className="mt-0.5 rounded border-slate-700 bg-slate-950 text-cyan-500 focus:ring-0"
+              className="mt-0.5 rounded border-slate-700 bg-slate-900 text-slate-200 focus:ring-0"
             />
             <div>
               <span className="font-semibold text-slate-200">Numbers to Expressions</span>
-              <p className="text-[11px] text-slate-400">Converts numbers to binary math operations</p>
+              <p className="text-[11px] text-slate-400 mt-0.5">Replaces numeric constants with computed bitwise expressions</p>
             </div>
           </label>
 
           {/* Transform Object Keys */}
-          <label className="flex items-start space-x-2.5 cursor-pointer">
+          <label className="flex items-start space-x-2.5 cursor-pointer p-2.5 rounded-lg border border-[#1b202c] hover:border-[#283042] bg-[#0f121a] transition">
             <input
               type="checkbox"
               checked={Boolean(config.transformObjectKeys)}
               onChange={(e) => onChange({ transformObjectKeys: e.target.checked })}
-              className="mt-0.5 rounded border-slate-700 bg-slate-950 text-cyan-500 focus:ring-0"
+              className="mt-0.5 rounded border-slate-700 bg-slate-900 text-slate-200 focus:ring-0"
             />
             <div>
               <span className="font-semibold text-slate-200">Transform Object Keys</span>
-              <p className="text-[11px] text-slate-400">Turns obj.key into obj['key'] with string obfuscation</p>
-            </div>
-          </label>
-
-          {/* Rename Globals */}
-          <label className="flex items-start space-x-2.5 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={Boolean(config.renameGlobals)}
-              onChange={(e) => onChange({ renameGlobals: e.target.checked })}
-              className="mt-0.5 rounded border-slate-700 bg-slate-950 text-cyan-500 focus:ring-0"
-            />
-            <div>
-              <span className="font-semibold text-slate-200">Rename Globals</span>
-              <p className="text-[11px] text-slate-400">Warning: May break browser globals if not configured</p>
-            </div>
-          </label>
-
-          {/* Split Strings */}
-          <label className="flex items-start space-x-2.5 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={Boolean(config.splitStrings)}
-              onChange={(e) => onChange({
-                splitStrings: e.target.checked,
-                splitStringsChunkLength: e.target.checked ? 5 : 10,
-              })}
-              className="mt-0.5 rounded border-slate-700 bg-slate-950 text-cyan-500 focus:ring-0"
-            />
-            <div>
-              <span className="font-semibold text-slate-200">Split Strings</span>
-              <p className="text-[11px] text-slate-400">Splits literal strings into small chunks concatenated</p>
-            </div>
-          </label>
-
-          {/* Disable Console */}
-          <label className="flex items-start space-x-2.5 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={Boolean(config.disableConsoleOutput)}
-              onChange={(e) => onChange({ disableConsoleOutput: e.target.checked })}
-              className="mt-0.5 rounded border-slate-700 bg-slate-950 text-cyan-500 focus:ring-0"
-            />
-            <div>
-              <span className="font-semibold text-slate-200">Silence Console Output</span>
-              <p className="text-[11px] text-slate-400">Mutes console.log, info, error, and debug calls</p>
+              <p className="text-[11px] text-slate-400 mt-0.5">Turns obj.key access into bracketed obfuscated lookups</p>
             </div>
           </label>
         </div>

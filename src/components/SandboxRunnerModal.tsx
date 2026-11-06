@@ -25,7 +25,6 @@ export const SandboxRunnerModal: React.FC<SandboxRunnerModalProps> = ({
 
     const capturedLogs: string[] = [];
 
-    // Create an isolated sandboxed iframe to capture console logs without polluting host
     const iframe = document.createElement('iframe');
     iframe.style.display = 'none';
     iframe.sandbox.add('allow-scripts');
@@ -39,7 +38,6 @@ export const SandboxRunnerModal: React.FC<SandboxRunnerModalProps> = ({
     }
 
     try {
-      // Hook console
       const customConsole = {
         log: (...args: any[]) => {
           capturedLogs.push('[LOG] ' + args.map((a) => (typeof a === 'object' ? JSON.stringify(a) : String(a))).join(' '));
@@ -52,7 +50,6 @@ export const SandboxRunnerModal: React.FC<SandboxRunnerModalProps> = ({
         },
       };
 
-      // Wrap code in self-executing container with custom console
       const runScript = `
         (function(console) {
           try {
@@ -77,49 +74,51 @@ export const SandboxRunnerModal: React.FC<SandboxRunnerModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-[#06070a]/80 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="bg-[#0e1119] border border-[#202737] rounded-xl w-full max-w-xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
+        <div className="px-5 py-3.5 border-b border-[#1c2230] flex items-center justify-between bg-[#0b0d14]">
           <div className="flex items-center space-x-2 text-slate-100">
-            <Terminal className="w-5 h-5 text-emerald-400" />
-            <h2 className="text-sm font-bold">Isolated Sandbox Execution Test</h2>
+            <Terminal className="w-4 h-4 text-slate-300" />
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-200">
+              Isolated Execution Sandbox
+            </h2>
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-200 transition p-1 rounded-lg"
+            className="text-slate-400 hover:text-slate-200 transition p-1 rounded-md"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-4 text-xs text-slate-300">
-          <p className="text-[11px] text-slate-400">
-            Executes the obfuscated script in an isolated sandboxed iframe to verify that syntax,
-            identifier scoping, and string encoding didn't cause runtime syntax or reference errors.
+        <div className="p-5 space-y-4 text-xs text-slate-300">
+          <p className="text-[11px] text-slate-400 leading-relaxed">
+            Verifies that identifier mangling and string transformations didn't introduce runtime syntax
+            or reference faults inside an isolated sandbox iframe.
           </p>
 
           <div className="flex justify-between items-center">
-            <span className="font-semibold text-slate-200">Sandbox Console Output:</span>
+            <span className="font-semibold text-slate-200">Console Logs:</span>
             <button
               onClick={handleExecute}
               disabled={isRunning || !code}
-              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white font-semibold shadow transition"
+              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-white disabled:opacity-40 text-slate-950 font-semibold transition"
             >
-              <Play className="w-3.5 h-3.5 fill-current" />
-              <span>{isRunning ? 'Running...' : 'Run in Sandbox'}</span>
+              <Play className="w-3 h-3 fill-current" />
+              <span>{isRunning ? 'Executing...' : 'Run in Sandbox'}</span>
             </button>
           </div>
 
-          <div className="p-3 bg-slate-950 border border-slate-800 rounded-xl font-mono text-[11px] min-h-[160px] max-h-60 overflow-y-auto space-y-1">
+          <div className="p-3 bg-[#08090f] border border-[#1b202d] rounded-lg font-mono text-[11px] min-h-[160px] max-h-60 overflow-y-auto space-y-1">
             {executionError ? (
               <div className="text-rose-400 flex items-center space-x-2">
                 <AlertCircle className="w-4 h-4 shrink-0" />
-                <span>Sandbox Error: {executionError}</span>
+                <span>Error: {executionError}</span>
               </div>
             ) : logs.length === 0 ? (
-              <span className="text-slate-500 italic">Click "Run in Sandbox" to execute the obfuscated script and view captured output.</span>
+              <span className="text-slate-500 italic">Click "Run in Sandbox" to capture script runtime output.</span>
             ) : (
               logs.map((log, index) => (
                 <div
