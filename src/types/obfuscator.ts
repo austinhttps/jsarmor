@@ -1,15 +1,13 @@
-import type { ObfuscatorOptions } from 'javascript-obfuscator';
-
 export type PresetTier = 'light' | 'balanced' | 'stealth';
 
 export interface SecurityOptions {
   domainLock: string[];
   selfDefending: boolean;
   debugProtection: boolean;
-  debugProtectionInterval: number | boolean;
+  debugProtectionInterval: number;
 }
 
-export type ObfuscatorConfig = ObfuscatorOptions;
+export type ObfuscatorConfig = Record<string, any>;
 
 export interface MetricsData {
   originalBytes: number;
