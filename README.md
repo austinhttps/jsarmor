@@ -1,86 +1,64 @@
-# JS Armor | In-Browser JavaScript Obfuscation Web Service
+# JS Armor
 
-A zero-trust, client-side web application and developer service for protecting JavaScript source code and distribution bundles.
+Fast, client-side JavaScript obfuscation service. Runs entirely in your browser using Web Workers so sensitive code and proprietary logic never touch a remote server.
 
-![JS Armor Interface](public/vite.svg)
-
----
-
-## Key Highlights
-
-- **100% Client-Side Privacy (Zero-Trust):** Transformations occur entirely inside your browser via dedicated Web Workers. No proprietary intellectual property or scripts ever leave your machine or hit remote servers.
-- **Dedicated Web Worker Engine:** Offloads AST scrambling, identifier mangling, and string array generation off the main UI thread. Full cancel/abort and timeout resilience.
-- **Curated Outcome Presets:**
-  - **Light (Performance):** Variable mangling, minification, and zero runtime performance impact.
-  - **Balanced (Recommended):** Base64/string array extraction, index rotation, and object key obfuscation.
-  - **Stealth (Maximum Security):** Control flow flattening, dead code injection, and RC4 string encryption.
-- **Fine-Grained AST Control:** Expandable knobs for fine-tuning threshold percentages, string chunks, number transformations, and console silencing.
-- **Enterprise Security Features:**
-  - **Domain Locking:** Restricts script execution to approved domains and ports (redirects unauthorized execution to `about:blank`).
-  - **Self-Defending Anti-Tamper:** Detects code beautification or formatting and halts with defensive recursion traps.
-  - **Debug Protection:** Fires continuous `debugger;` triggers if DevTools are opened.
-- **Dual Monaco Editor & Diff View:** Syntax highlighted side-by-side editing, diff inspector, instant copy, and single `.js` file export.
-- **Multi-File & ZIP Batch Processor:** Drag-and-drop `.zip` projects or distribution packages. Obfuscates all `.js`, `.mjs`, and `.cjs` files while retaining directory structures, HTML, CSS, and media assets untouched.
-- **Diagnostics Bar:** Real-time feedback on original vs. obfuscated byte size, expansion percentage, compute time (ms), and syntax validation.
-- **CLI Exporter & URL Sharing:** Export `obfuscator.config.json`, generate copyable `npx javascript-obfuscator` commands, and share snippets with URL hash state.
-- **Sandboxed Test Runner:** Execute transformed scripts inside an isolated iframe sandbox to verify runtime console logs and confirm no syntax/scoping breakages occurred.
+Live instance: [jsarmor.vercel.app](https://jsarmor.vercel.app)
 
 ---
 
-## Getting Started
+## Features
 
-### Prerequisites
-- Node.js >= 18 (Tested on Node 20 & Node 26)
-- npm or pnpm
+- **Client-Side Processing:** All AST transformations execute locally in isolated Web Workers via `javascript-obfuscator`. Zero network requests for your code.
+- **Three Protection Tiers:**
+  - `Tier 1 (Light)`: Minification and identifier mangling with 0% runtime CPU penalty.
+  - `Tier 2 (Balanced)`: String array extraction, base64 encryption, and rotated object property lookups.
+  - `Tier 3 (Stealth)`: Control-flow flattening, dead code injection, and RC4 string encoding.
+- **Interactive Dual Editor:** Side-by-side Monaco code editor with inline diff mode, syntax validation, and instant file export.
+- **Batch ZIP Archive Protection:** Drag-and-drop a project `.zip` archive. Obfuscates all `.js`, `.mjs`, and `.cjs` files while keeping directory structures, HTML, CSS, and media assets untouched.
+- **Security Boundaries:**
+  - *Domain Lock*: Halts execution if the script runs on unauthorized hostnames.
+  - *Self-Defending*: Injects recursion traps against code beautification or formatting.
+  - *Debug Protection*: Halts execution with continuous debugger triggers when DevTools are opened.
+- **Isolated Sandbox Test:** Runs obfuscated code in a sandboxed iframe to capture console logs and verify runtime behavior before deployment.
+- **Configuration & CLI Export:** Download `obfuscator.config.json`, generate `npx javascript-obfuscator` build commands, or share snippets via URL hash state.
 
-### Installation
+---
+
+## Architecture
+
+```
+[ Monaco Editor / ZIP Dropzone ]
+               │
+               ▼
+   [ Worker Controller Bridge ]
+               │ (postMessage)
+               ▼
+    [ Dedicated Web Worker ]
+   javascript-obfuscator AST
+   Metrics & Syntax Validation
+               │
+               ▼
+[ Monaco Output / JSZip Repacker ]
+```
+
+---
+
+## Development
+
 ```bash
-git clone <repo-url>
-cd JSObfuscation
+# Install dependencies
 npm install
-```
 
-### Development Server
-```bash
+# Start development server
 npm run dev
-```
-Open your browser at `http://localhost:5173`.
 
-### Running Unit Tests
-```bash
+# Run test suite
 npm test
-```
-All unit test suites run via [Vitest](https://vitest.dev).
 
-### Production Build
-```bash
+# Build for production
 npm run build
 ```
-Generates production-optimized chunks in `dist/` ready to host on GitHub Pages, Vercel, Netlify, or any static file server.
-
----
-
-## Architecture & Worker Pipeline
-
-```
-[ Monaco Code Editor / ZIP Dropzone ]
-                 │
-                 ▼
-    [ Worker Controller Bridge ]
-                 │ (postMessage)
-                 ▼
-     [ Dedicated Web Worker ]
-   ┌───────────────────────────┐
-   │ javascript-obfuscator AST │
-   │ Metric & Timing Computer  │
-   │ Pre/Post Syntax Checker   │
-   └───────────────────────────┘
-                 │
-                 ▼
- [ Monaco Output / JSZip Repacker ]
-```
-
----
 
 ## License
+
 MIT
